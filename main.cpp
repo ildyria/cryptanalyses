@@ -4,6 +4,7 @@
 #include <string>
 #include "includes/typedef.h"
 #include "includes/args.h"
+#include "includes/cipher.h"
 // #include "tools/prime_list.h"
 #include "tools/big_int.h"
 #include "tools/Timer.h"

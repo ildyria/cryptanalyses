@@ -1,11 +1,11 @@
 GMPDIR=/home-reseau/bviguier/gmp
 CC=g++
 BIN=bin
-INCLUDE=-I problem -I includes -I $(GMPDIR)/include 
+INCLUDE=-I cipher -I includes -I $(GMPDIR)/include 
 CFLAGS=-c -pedantic -O2 -Wall -std=c++11 $(INCLUDE)
 LDFLAGS=-std=c++11 -lgmpxx -lgmp
 LIB=-L $(GMPDIR)/lib
-SOURCES=big_int.cpp main.cpp $(wildcard problem/*.cpp)
+SOURCES=big_int.cpp main.cpp $(wildcards cipher/*.cpp)
 OBJECTS=$(addprefix $(BIN)/, $(notdir $(SOURCES:.cpp=.o)))
 EXECUTABLE=$(BIN)/main
 vpath %.cpp includes:tools
