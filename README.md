@@ -12,14 +12,16 @@ Mainly exercices from [Modern Cryptanalysis: Techniques for Advanced Code Breaki
 ### Compile
 
 Make
-> make
-
-> cd bin
-
-> ./main
+```bash
+make
+cd bin
+./main
+```
 
 Clear MM
-> make clean
+```bash
+make clean
+```
 
 ### References
 * [Differential Cryptanalysis of DES-like Cryptosystem (Ext Abstract) - Biham, Shamir](http://link.springer.com/chapter/10.1007%2F3-540-38424-3_1)
