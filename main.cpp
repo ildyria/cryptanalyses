@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
 
 	// int problem_chosen = read_args(argc, argv);
 
-	Easy1* easy_cipher = new Easy1(0x0,1);
+	Easy1* easy_cipher = new Easy1(0xf0f0f0f,5);
 
 	Timer t = Timer();
 	t.start();
@@ -48,7 +48,7 @@ int main(int argc, char const *argv[])
 
 	t.stop();
 
-	easy_cipher->print_boxes();
+	// easy_cipher->print_boxes();
 
 	printf("done in : %.3lf ms\n", t.resultmus()/1000.0);
 
