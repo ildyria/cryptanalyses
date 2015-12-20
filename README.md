@@ -4,10 +4,8 @@ Master student currently learning cryptanalysis.
 
 ### What you will find here
 
-This repo will contain some ciphers and tentative to break them in C/C++.
-
+This repo will contain some ciphers and tentative to break them in C/C++. <br>
 Mainly exercices from [Modern Cryptanalysis: Techniques for Advanced Code Breaking - Swenson](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-047013593X.html)
-[//]: # (<img src="img/moderncrypto.jpg" width="50px">)
 
 ### Compile
 
