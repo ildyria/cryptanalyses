@@ -5,7 +5,7 @@ Master student currently learning cryptanalysis.
 ### What you will find here
 
 This repo will contain some ciphers and tentative to break them. Exercices from [Modern Cryptanalysis: Techniques for Advanced Code Breaking - Swenson](http://eu.wiley.com/WileyCDA/WileyTitle/productCd-047013593X.html)
-![Modern Cryptanalysis](img/moderncrypto.jpg =50x)
+<img src="img/moderncrypto.jpg" width="50px">
 
 ### Some links and usefull readings
 * [Differential Cryptanalysis of DES-like Cryptosystem (Ext Abstract) - Biham, Shamir](http://link.springer.com/chapter/10.1007%2F3-540-38424-3_1)
