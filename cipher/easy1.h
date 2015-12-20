@@ -26,9 +26,6 @@ class Easy1 : public Cipher
 	uint8 unapply_sbox(uint8 index);
 	uint64 unapply_pbox(uint64 input);
 
-	void split(uint64 input, uint8* output);
-	uint64 join(uint8* input);
-
 	uint64 apply_key(uint64 input);
 
 	uint64 round(uint64 input);

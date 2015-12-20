@@ -25,6 +25,10 @@ int main(int argc, char const *argv[])
 			device = new Easy1(0xf0f0f0f,3);
 			break;
 
+		case 2:
+			device = new Easy1(0xf0f0f0f,3);
+			break;
+
 		default:
 			device = new Easy1(0xf0f0f0f,3);
 	}
@@ -41,7 +45,7 @@ int main(int argc, char const *argv[])
 	device->print(decrypt);
 	printf("\n");
 
-	// device->test();
+	device->test();
 
 	t.stop();
 

@@ -10,7 +10,7 @@ class Cipher
 protected:
 	uint64 _key;
 	uint64 _rounds;
-	bool verbose = true;
+	bool verbose = false;
 
 public:
 

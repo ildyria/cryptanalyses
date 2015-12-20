@@ -36,82 +36,6 @@ uint64 Easy1::unapply_pbox(uint64 input) {
 	return output;
 }
 
-void Easy1::split(uint64 input, uint8* output) {
-	if(verbose) {
-		uint64 mask = 1;
-		mask <<= 35;
-		for (int i = 0; i < 36; ++i)
-		{
-			if((i % 6 == 0) && (i > 0)) printf("|");
-			printf("%li", (mask & input) >> (35 - i));
-			mask >>= 1;
-		}
-		printf("\n");
-	}
-
-	// ACTUAL FUNCTION...
-	for (int i = 0; i < 6; ++i)
-	{
-		output[i] = (input >> (i*6)) & 0x3f;
-	}
-
-	if(verbose) {
-		uint8 mask = 1;
-		for (int i = 0; i < 6; ++i)
-		{
-			if(i > 0) printf("|");
-			mask = 1;
-			mask <<= 5;
-			for (int j = 0; j < 6; ++j)
-			{
-				printf("%i", (mask & output[5-i]) >> (5 - j));
-				mask >>= 1;
-			}
-		}
-		printf("\n");
-	}
-}
-
-uint64 Easy1::join(uint8* input) {
-	uint64 output = 0;
-
-	if(verbose) {
-		// uint8 mask = 1;
-		for (int i = 0; i < 6; ++i)
-		{
-			if(i > 0) printf("|");
-			// mask = 1;
-			// mask <<= 5;
-			Crypto_tools::print<6>(input[5-i]);
-			// for (int j = 0; j < 6; ++j)
-			// {
-			// 	printf("%i", (mask & input[5-i]) >> (5 - j));
-			// 	mask >>= 1;
-			// }
-		}
-		printf("\n");
-	}
-
-	for (int i = 0; i < 6; ++i)
-	{
-		output <<= 6;
-		output = (output | (input[5-i] & 0x3f));
-	}
-
-	if(verbose) {
-		uint64 mask2 = 1;
-		mask2 <<= 35;
-		for (int i = 0; i < 36; ++i)
-		{
-			if((i % 6 == 0) && (i > 0)) printf("|");
-			printf("%li", (mask2 & output) >> (35 - i));
-			mask2 >>= 1;
-		}
-		printf("\n");
-	}
-	return output;
-}
-
 uint64 Easy1::apply_key(uint64 input)
 {
 	// key is 18 bits
@@ -125,12 +49,12 @@ uint64 Easy1::round(uint64 input)
 	if(verbose) Crypto_tools::printn<36>(input);
 	uint8 tab[6] = {0,0,0,0,0,0};
 
-	split(input,tab);
+	Crypto_tools::split<uint64,uint8,6,6,0x3f>(input,tab);
 	for (int i = 0; i < 6; ++i)
 	{
 		tab[i] = apply_sbox(tab[i]);
 	}
-	input = join(tab);
+	input = Crypto_tools::join<uint8,uint64,6,6,0x3f>(tab);
 	if(verbose) printf("sbox  : ");
 	if(verbose) Crypto_tools::printn<36>(input);
 
@@ -162,12 +86,12 @@ uint64 Easy1::unround(uint64 input)
 	if(verbose) Crypto_tools::printn<36>(input);
 
 	uint8 tab[6] = {0,0,0,0,0,0};
-	split(input,tab);
+	Crypto_tools::split<uint64,uint8,6,6,0x3f>(input,tab);
 	for (int i = 0; i < 6; ++i)
 	{
 		tab[i] = unapply_sbox(tab[i]);
 	}
-	input = join(tab);
+	input = Crypto_tools::join<uint8,uint64,6,6,0x3f>(tab);
 	if(verbose) printf("-sbox : ");
 	if(verbose) Crypto_tools::printn<36>(input);
 	

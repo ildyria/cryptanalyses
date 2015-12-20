@@ -6,7 +6,7 @@
 
 // caracteristics of Feal
 // 64 bits key
-// 2x32 bits blocs (Feistel-based)
+// 2 x 32 bits blocs (Feistel-based)
 // 8 rounds
 // require key-schedule
 // no S box but a function : rot2((x + y + delta) & 0xff)
@@ -26,9 +26,6 @@ class Feal : public Cipher
 	uint64 apply_pbox(uint64 input);
 	uint8 unapply_sbox(uint8 index);
 	uint64 unapply_pbox(uint64 input);
-
-	void split(uint64 input, uint8* output);
-	uint64 join(uint8* input);
 
 	uint64 apply_key(uint64 input);
 
