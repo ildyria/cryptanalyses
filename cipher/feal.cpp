@@ -1,13 +1,13 @@
-#include "easy1.h"
+#include "feal.h"
 
-uint8 Easy1::apply_sbox(uint8 index) {
+uint8 Feal::apply_sbox(uint8 index) {
 	return sbox[index];
 }
-uint8 Easy1::unapply_sbox(uint8 index) {
+uint8 Feal::unapply_sbox(uint8 index) {
 	return inv_sbox[index];
 }
 
-uint64 Easy1::apply_pbox(uint64 input) {
+uint64 Feal::apply_pbox(uint64 input) {
 	uint64 output = 0;
 	uint64 mask = 1;
 
@@ -21,7 +21,7 @@ uint64 Easy1::apply_pbox(uint64 input) {
 	}
 	return output;
 }
-uint64 Easy1::unapply_pbox(uint64 input) {
+uint64 Feal::unapply_pbox(uint64 input) {
 	uint64 output = 0;
 	uint64 mask = 1;
 
@@ -36,7 +36,7 @@ uint64 Easy1::unapply_pbox(uint64 input) {
 	return output;
 }
 
-void Easy1::split(uint64 input, uint8* output) {
+void Feal::split(uint64 input, uint8* output) {
 	if(verbose) {
 		uint64 mask = 1;
 		mask <<= 35;
@@ -72,22 +72,21 @@ void Easy1::split(uint64 input, uint8* output) {
 	}
 }
 
-uint64 Easy1::join(uint8* input) {
+uint64 Feal::join(uint8* input) {
 	uint64 output = 0;
 
 	if(verbose) {
-		// uint8 mask = 1;
+		uint8 mask = 1;
 		for (int i = 0; i < 6; ++i)
 		{
 			if(i > 0) printf("|");
-			// mask = 1;
-			// mask <<= 5;
-			Crypto_tools::print<6>(input[5-i]);
-			// for (int j = 0; j < 6; ++j)
-			// {
-			// 	printf("%i", (mask & input[5-i]) >> (5 - j));
-			// 	mask >>= 1;
-			// }
+			mask = 1;
+			mask <<= 5;
+			for (int j = 0; j < 6; ++j)
+			{
+				printf("%i", (mask & input[5-i]) >> (5 - j));
+				mask >>= 1;
+			}
 		}
 		printf("\n");
 	}
@@ -112,17 +111,17 @@ uint64 Easy1::join(uint8* input) {
 	return output;
 }
 
-uint64 Easy1::apply_key(uint64 input)
+uint64 Feal::apply_key(uint64 input)
 {
 	// key is 18 bits
 	return (input ^ _key);
 }
 
-uint64 Easy1::round(uint64 input)
+uint64 Feal::round(uint64 input)
 {
 	if(verbose) printf("------------------\n");
 	if(verbose) printf("input : ");
-	if(verbose) Crypto_tools::printn<36>(input);
+	if(verbose) print(input);
 	uint8 tab[6] = {0,0,0,0,0,0};
 
 	split(input,tab);
@@ -132,34 +131,34 @@ uint64 Easy1::round(uint64 input)
 	}
 	input = join(tab);
 	if(verbose) printf("sbox  : ");
-	if(verbose) Crypto_tools::printn<36>(input);
+	if(verbose) print(input);
 
 	input = apply_pbox(input);
 	if(verbose) printf("pbox  : ");
-	if(verbose) Crypto_tools::printn<36>(input);
+	if(verbose) print(input);
 	
 	input = apply_key(input);
 	if(verbose) printf("key   : ");
-	if(verbose) Crypto_tools::printn<36>(input);
+	if(verbose) print(input);
 	
 	if(verbose) printf("------------------\n");
 	return input;
 }
 
 
-uint64 Easy1::unround(uint64 input)
+uint64 Feal::unround(uint64 input)
 {
 	if(verbose) printf("------------------\n");
 	if(verbose) printf("input : ");
-	if(verbose) Crypto_tools::printn<36>(input);
+	if(verbose) print(input);
 
 	input = apply_key(input);
 	if(verbose) printf("-key  : ");
-	if(verbose) Crypto_tools::printn<36>(input);
+	if(verbose) print(input);
 
 	input = unapply_pbox(input);
 	if(verbose) printf("-pbox : ");
-	if(verbose) Crypto_tools::printn<36>(input);
+	if(verbose) print(input);
 
 	uint8 tab[6] = {0,0,0,0,0,0};
 	split(input,tab);
@@ -169,14 +168,14 @@ uint64 Easy1::unround(uint64 input)
 	}
 	input = join(tab);
 	if(verbose) printf("-sbox : ");
-	if(verbose) Crypto_tools::printn<36>(input);
+	if(verbose) print(input);
 	
 	if(verbose) printf("------------------\n");
 	return input;
 }
 
 
-uint64 Easy1::encrypt(uint64 input) {
+uint64 Feal::encrypt(uint64 input) {
 	for (uint i = 0; i < _rounds; ++i)
 	{
 		input = round(input);
@@ -184,7 +183,7 @@ uint64 Easy1::encrypt(uint64 input) {
 	return input;
 }
 
-uint64 Easy1::decrypt(uint64 input) {
+uint64 Feal::decrypt(uint64 input) {
 	for (uint i = 0; i < _rounds; ++i)
 	{
 		input = unround(input);
@@ -193,7 +192,7 @@ uint64 Easy1::decrypt(uint64 input) {
 }
 
 
-void Easy1::print_boxes(){
+void Feal::print_boxes(){
 	printf("pbox\n");
 	for(uint i = 0; i < 36; ++i)
 	{
@@ -206,21 +205,28 @@ void Easy1::print_boxes(){
 	}
 }
 
-void Easy1::print(uint64 input)
+void Feal::print(uint64 input)
 {
-	Crypto_tools::printn<36>(input);
+	uint64 mask = 1;
+	mask <<= 35;
+	for (int i = 0; i < 36; ++i)
+	{
+		printf("%li", (mask & input) >> (35 - i));
+		mask >>= 1;
+	}
+	printf("\n");
 }
 
-void Easy1::test(){
+void Feal::test(){
 	uint64 toencrypt = 1;
 	for (int i = 0; i < 36; ++i)
 	{
 		printf("%i\n",i);
-		Crypto_tools::printn<36>(toencrypt);
+		print(toencrypt);
 		auto temp = encrypt(toencrypt);
-		Crypto_tools::printn<36>(temp);
+		print(temp);
 		temp = decrypt(temp);
-		Crypto_tools::printn<36>(temp);
+		print(temp);
 		printf("====================\n");
 
 		toencrypt <<= 1;

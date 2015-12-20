@@ -4,13 +4,14 @@
 #include "../includes/cipher.h"
 #include "../tools/crypto_tools.h"
 
-// caracteristics of Easy1
-// 18 bits key
-// 6 bits S box x 6
-// 36 bits P box
-// Round : S box -> P box -> Xor(key || key)
+// caracteristics of Feal
+// 64 bits key
+// 2x32 bits blocs (Feistel-based)
+// 8 rounds
+// require key-schedule
+// no S box but a function : rot2((x + y + delta) & 0xff)
 
-class Easy1 : public Cipher
+class Feal : public Cipher
 {
 	uint8 sbox[64] = {16, 42, 28, 3, 26, 0, 31, 46, 27, 14, 49, 62, 37, 56, 23, 6, 40, 48, 53, 8,
 					20, 25, 33, 1, 2, 63, 15, 34, 55, 21, 39, 57, 54, 45, 47, 13, 7, 44, 61, 9,
@@ -38,11 +39,11 @@ class Easy1 : public Cipher
 
 public:
 
-	Easy1(uint64 key, uint64 rounds) : Cipher(((key & 0x3f) << 18) | (key & 0x3f), rounds) {
+	Feal(uint64 key, uint64 rounds) : Cipher(((key & 0x3f) << 18) | (key & 0x3f), rounds) {
 		Crypto_tools::inv_box(pbox, inv_pbox, 36);
 		Crypto_tools::inv_box(sbox, inv_sbox, 64);
 	};
-	~Easy1() {};
+	~Feal() {};
 
 	uint64 encrypt(uint64 b) override;
 

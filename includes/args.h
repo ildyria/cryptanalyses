@@ -14,7 +14,7 @@ int read_args(int& argc, char const* argv[])
 	}
 	else
 	{
-		printf("problem by default\n");
+		printf("cipher by default\n");
 	}
 
 	return i;
