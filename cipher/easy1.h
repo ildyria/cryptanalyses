@@ -1,5 +1,4 @@
 #pragma once
-#include "../includes/bloc.h"
 #include "../includes/typedef.h"
 #include "../includes/cipher.h"
 #include "../tools/crypto_tools.h"

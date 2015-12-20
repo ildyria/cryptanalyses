@@ -1,101 +1,29 @@
 #include "feal.h"
 
-uint8 Feal::apply_sbox(uint8 index) {
-	return sbox[index];
-}
-uint8 Feal::unapply_sbox(uint8 index) {
-	return inv_sbox[index];
-}
+uint32 Feal::roundf(uint32 alpha, uint32 beta){
+	uint8 alphatab[4] = {0,0,0,0};
+	uint8 betatab[4] = {0,0,0,0};
 
-uint64 Feal::apply_pbox(uint64 input) {
-	uint64 output = 0;
-	uint64 mask = 1;
+	Crypto_tools::split<uint64,uint8,8,4,0xff>(alpha,alphatab);
+	Crypto_tools::split<uint64,uint8,8,4,0xff>(beta,betatab);
 
-	for (int i = 0; i < 36; ++i)
-	{
-		if((input & mask) > 0)
-		{
-			output = output | (static_cast<uint64>(1) << pbox[i]);
-		}
-		mask <<= 1;
-	}
-	return output;
-}
-uint64 Feal::unapply_pbox(uint64 input) {
-	uint64 output = 0;
-	uint64 mask = 1;
+	uint8 fs[4] = {0,0,0,0};
 
-	for (int i = 0; i < 36; ++i)
-	{
-		if((input & mask) > 0)
-		{
-			output = output | (static_cast<uint64>(1) << inv_pbox[i]);
-		}
-		mask <<= 1;
-	}
-	return output;
+	fs[1] = alphatab[1] ^ betatab[0] ^ alphatab[0];
+	fs[2] = alphatab[2] ^ betatab[1] ^ alphatab[3];
+	fs[1] = sbox(fs[1], fs[2], 1);
+	fs[2] = sbox(fs[2], fs[1], 0);
+	fs[0] = sbox(alphatab[0], fs[1], 0);
+	fs[3] = sbox(alphatab[3], fs[2], 1);
+
+	return Crypto_tools::join<uint8,uint64,8,4,0x3f>(fs);
 }
 
-uint64 Feal::apply_key(uint64 input)
-{
-	// key is 18 bits
-	return (input ^ _key);
-}
-
-uint64 Feal::round(uint64 input)
-{
-	if(verbose) printf("------------------\n");
-	if(verbose) printf("input : ");
-	if(verbose) Crypto_tools::printn<36>(input);
-	uint8 tab[6] = {0,0,0,0,0,0};
-
-	Crypto_tools::split<uint64,uint8,6,6,0x3f>(input,tab);
-	for (int i = 0; i < 6; ++i)
-	{
-		tab[i] = apply_sbox(tab[i]);
-	}
-	input = Crypto_tools::join<uint8,uint64,6,6,0x3f>(tab);
-	if(verbose) printf("sbox  : ");
-	if(verbose) Crypto_tools::printn<36>(input);
-
-	input = apply_pbox(input);
-	if(verbose) printf("pbox  : ");
-	if(verbose) Crypto_tools::printn<36>(input);
-	
-	input = apply_key(input);
-	if(verbose) printf("key   : ");
-	if(verbose) Crypto_tools::printn<36>(input);
-	
-	if(verbose) printf("------------------\n");
+pair<uint32,uint32>* Feal::round(pair<uint32,uint32>* input){
 	return input;
 }
 
-
-uint64 Feal::unround(uint64 input)
-{
-	if(verbose) printf("------------------\n");
-	if(verbose) printf("input : ");
-	if(verbose) Crypto_tools::printn<36>(input);
-
-	input = apply_key(input);
-	if(verbose) printf("-key  : ");
-	if(verbose) Crypto_tools::printn<36>(input);
-
-	input = unapply_pbox(input);
-	if(verbose) printf("-pbox : ");
-	if(verbose) Crypto_tools::printn<36>(input);
-
-	uint8 tab[6] = {0,0,0,0,0,0};
-	Crypto_tools::split<uint64,uint8,6,6,0x3f>(input,tab);
-	for (int i = 0; i < 6; ++i)
-	{
-		tab[i] = unapply_sbox(tab[i]);
-	}
-	input = Crypto_tools::join<uint8,uint64,6,6,0x3f>(tab);
-	if(verbose) printf("-sbox : ");
-	if(verbose) Crypto_tools::printn<36>(input);
-	
-	if(verbose) printf("------------------\n");
+pair<uint32,uint32>* Feal::unround(pair<uint32,uint32>* input){
 	return input;
 }
 
@@ -103,7 +31,7 @@ uint64 Feal::unround(uint64 input)
 uint64 Feal::encrypt(uint64 input) {
 	for (uint i = 0; i < _rounds; ++i)
 	{
-		input = round(input);
+		// input = round(input);
 	}
 	return input;
 }
@@ -111,23 +39,9 @@ uint64 Feal::encrypt(uint64 input) {
 uint64 Feal::decrypt(uint64 input) {
 	for (uint i = 0; i < _rounds; ++i)
 	{
-		input = unround(input);
+		// input = unround(input);
 	}
 	return input;
-}
-
-
-void Feal::print_boxes(){
-	printf("pbox\n");
-	for(uint i = 0; i < 36; ++i)
-	{
-		printf("%4u   => %4u   => %4u   \n",i,pbox[i],inv_pbox[pbox[i]]);
-	}
-	printf("sbox\n");
-	for(uint i = 0; i < 64; ++i)
-	{
-		printf("%4u   => %4u   => %4u   \n",i,sbox[i],inv_sbox[sbox[i]]);
-	}
 }
 
 void Feal::print(uint64 input)
@@ -152,5 +66,4 @@ void Feal::test(){
 
 	printf("########################\n");
 
-	print_boxes();
 }
