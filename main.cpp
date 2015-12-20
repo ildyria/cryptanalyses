@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
 
 	// int problem_chosen = read_args(argc, argv);
 
-	Easy1* easy_cipher = new Easy1(0xf0f0f0f,5);
+	Easy1* easy_cipher = new Easy1(0xf0f0f0f,3);
 
 	Timer t = Timer();
 	t.start();

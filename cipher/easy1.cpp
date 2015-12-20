@@ -133,7 +133,7 @@ uint64 Easy1::round(uint64 input)
 	if(verbose) printf("sbox  : ");
 	if(verbose) print(input);
 
-	// input = apply_pbox(input);
+	input = apply_pbox(input);
 	if(verbose) printf("pbox  : ");
 	if(verbose) print(input);
 	
@@ -156,7 +156,7 @@ uint64 Easy1::unround(uint64 input)
 	if(verbose) printf("-key  : ");
 	if(verbose) print(input);
 
-	// input = unapply_pbox(input);
+	input = unapply_pbox(input);
 	if(verbose) printf("-pbox : ");
 	if(verbose) print(input);
 
