@@ -20,14 +20,22 @@ class Feal : public Cipher
 		return Crypto_tools::rot2<uint8>((x + y + delta) & 0xff);
 	};
 
-	uint32 roundf(uint32 alpha, uint32 beta);
+	uint16* keys;
 
-	pair<uint32,uint32>* round(pair<uint32,uint32>* input);
-	pair<uint32,uint32>* unround(pair<uint32,uint32>* input);
+	uint32 fkey(uint32 alpha, uint32 beta);
+
+	void keyschedule();
+
+	uint32 roundf(uint32 message, uint16 key);
+
+	void round(pair<uint32,uint32>* input, int num);
+	void unround(pair<uint32,uint32>* input, int num);
 
 public:
 
 	Feal(uint64 key, uint64 rounds) : Cipher(key, rounds) {
+		keys = new uint16[2*rounds] {};
+		keyschedule();
 	};
 	~Feal() {};
 

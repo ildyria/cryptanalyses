@@ -9,12 +9,12 @@ class Cipher
 
 protected:
 	uint64 _key;
-	uint64 _rounds;
+	uint _rounds;
 	bool verbose = false;
 
 public:
 
-	Cipher(uint64 key, uint64 rounds) : _key(key), _rounds(rounds) {};
+	Cipher(uint64 key, int rounds) : _key(key), _rounds(rounds) {};
 
 	virtual ~Cipher(){};
 

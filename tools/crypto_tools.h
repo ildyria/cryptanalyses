@@ -1,11 +1,21 @@
 #pragma once
 #include "../includes/typedef.h"
+#include <climits>
+
 
 class Crypto_tools
 {
 public:
 	// Crypto_primitives();
 	// ~Crypto_primitives();
+
+	template<typename I, typename O, int blockSize, int blockNum, O mask> static void spliti(I input, O* output)
+	{
+		for (int i = 0; i < blockNum; ++i)
+		{
+			output[blockNum - (i+1)] = (input >> (i*blockSize)) & mask;
+		}
+	}
 
 	template<typename I, typename O, int blockSize, int blockNum, O mask> static void split(I input, O* output)
 	{
@@ -42,6 +52,17 @@ public:
 		// 	}
 		// 	printf("\n");
 		// }
+	}
+
+	template<typename I, typename O, int blockSize, int blockNum, O mask> static O joini(I* input)
+	{
+		O output = 0;
+		for (int i = 0; i < blockNum; ++i)
+		{
+			output <<= blockSize;
+			output = (output | (input[i] & mask));
+		}
+		return output;
 	}
 
 	template<typename I, typename O, int blockSize, int blockNum, O mask> static O join(I* input)
@@ -87,8 +108,8 @@ public:
 
 	template<typename U> static U rot2(U input)
 	{
-		U output = (input << 2) & 0xff;
-		output |= input >> (sizeof(U) - 2);
+		U output = (input << 2);
+		output |= input >> (sizeof(U)* CHAR_BIT - 2);
 		return output;
 	}
 
@@ -115,4 +136,12 @@ public:
 		printf("\n");
 	}
 
+	template<typename In, typename Out> static Out concat(In in1, In in2)
+	{
+		Out output = 0;
+		output |= in1;
+		output <<= sizeof(In) * CHAR_BIT;
+		output |= in2;
+		return output;
+	}
 };

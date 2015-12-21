@@ -26,7 +26,7 @@ int main(int argc, char const *argv[])
 			break;
 
 		case 2:
-			device = new Easy1(0xf0f0f0f,3);
+			device = new Feal(0x0123456789abcdef,8);
 			break;
 
 		default:
@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
 	Timer t = Timer();
 	t.start();
 	printf("result : \n");
-	auto cipher = device->encrypt(1);
+	auto cipher = device->encrypt(0);
 	printf("result of encrypt :\n");
 	device->print(cipher);
 	printf("====================\n");
