@@ -17,6 +17,8 @@ class Easy1 : public Cipher
 					58, 43, 35, 24};
 	uint8 pbox[36] = {24, 5, 15, 23, 14, 32, 19, 18, 26, 17, 6, 12, 34, 9, 8, 20, 28, 0, 2, 21, 29,
 					11, 33, 22, 30, 31, 1, 25, 3, 35, 16, 13, 27, 7, 10, 4};
+					// The meaning is as follows: the first bit of the INPUT is going to the 24th bit of the OUTPUT...
+
 	uint8 inv_sbox[64];
 	uint8 inv_pbox[36];
 

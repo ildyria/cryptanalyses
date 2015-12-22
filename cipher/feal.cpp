@@ -149,19 +149,21 @@ void Feal::print(uint64 input)
 }
 
 void Feal::test(){
-	// uint64 toencrypt = 0;
-	// for (int i = 0; i < 36; ++i)
-	// {
-	// 	printf("%i\n",i);
-	// 	Crypto_tools::printn<36>(toencrypt);
-	// 	auto temp = encrypt(toencrypt);
-	// 	Crypto_tools::printn<36>(temp);
-	// 	temp = decrypt(temp);
-	// 	Crypto_tools::printn<36>(temp);
-	// 	printf("====================\n");
-
-	// 	toencrypt <<= 1;
-	// }
+	uint64 toencrypt = 0;
+	printf("to cipher : %016lx\n",toencrypt);
+	printf("====================\n");
+	auto ciphered = encrypt(toencrypt);
+	printf("====================\n");
+	printf("ciphered : %016lx\n",ciphered);
+	printf("====================\n");
+	auto deciphered = decrypt(ciphered);
+	printf("====================\n");
+	printf("deciphered : %016lx\n",deciphered);
+	printf("====================\n");
+	printf("cipher must match : ceef2c86f2490752\n");
+	printf("cipher match ? %s\n",(ciphered == 0xceef2c86f2490752) ? "yes" : "no");
+	printf("plain and decrypt match ? %s\n",(0 == deciphered) ? "yes" : "no");
+	printf("====================\n");
 
 	for (uint i = 0; i < _rounds*2; ++i)
 	{

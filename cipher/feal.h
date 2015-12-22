@@ -17,7 +17,7 @@ using std::pair;
 class Feal : public Cipher
 {
 	inline uint8 sbox(uint8 x, uint8 y, uint8 delta) {
-		return Crypto_tools::rot2<uint8>((x + y + delta) & 0xff);
+		return Crypto_tools::rot<uint8,2>((x + y + delta) & 0xff);
 	};
 
 	uint16* keys;

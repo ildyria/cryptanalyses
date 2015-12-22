@@ -6,8 +6,32 @@
 class Crypto_tools
 {
 public:
-	// Crypto_primitives();
-	// ~Crypto_primitives();
+	template<typename I, int size> static int posi(I in){
+		I mask = 1;
+		mask <<= (size -1);
+		for (int i = 0; i < size; ++i)
+		{
+			if ((mask & in) > 0)
+			{
+				return i;
+			}
+			mask >>=1;
+		}
+		return -1;
+	}	
+
+	template<typename I, int size> static int pos(I in){
+		I mask = 1;
+		for (int i = 0; i < size; ++i)
+		{
+			if ((mask & in) > 0)
+			{
+				return i;
+			}
+			mask <<=1;
+		}
+		return -1;
+	}	
 
 	template<typename I, typename O, int blockSize, int blockNum, O mask> static void spliti(I input, O* output)
 	{
@@ -106,10 +130,17 @@ public:
 		}
 	}
 
-	template<typename U> static U rot2(U input)
+	template<typename U, int num> static inline U rot(U input)
 	{
-		U output = (input << 2);
-		output |= input >> (sizeof(U)* CHAR_BIT - 2);
+		U output = (input << num);
+		output |= input >> (sizeof(U)* CHAR_BIT - num);
+		return output;
+	}
+
+	template<typename U, int num, int size, U mask> static inline U rot(U input)
+	{
+		U output = (input << num) & mask;
+		output |= input >> (size - num);
 		return output;
 	}
 
@@ -156,6 +187,15 @@ public:
 		Out output = 0;
 		output |= in1;
 		output <<= sizeof(In) * CHAR_BIT;
+		output |= in2;
+		return output;
+	}
+
+	template<typename In, typename Out, int sub> static Out concat(In in1, In in2)
+	{
+		Out output = 0;
+		output |= in1;
+		output <<= sub;
 		output |= in2;
 		return output;
 	}

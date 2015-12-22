@@ -30,6 +30,11 @@ int main(int argc, char const *argv[])
 			device = new Feal(0x0123456789abcdef,8);
 			break;
 
+		case 3:
+			device = new Des(0x133457799bbcdff1);
+			// device = new Des(0x0123456789abcdef);
+			break;
+
 		default:
 			device = new Easy1(0xf0f0f0f,3);
 	}
