@@ -171,11 +171,13 @@ uint64 Des::encrypt(uint64 input) {
 	}
 
 	input = Crypto_tools::concat<uint32,uint64>(LR->second,LR->first);											// R8 || L8 (/!\ swap)
-	input = apply_pbox<uint64,64>(input,inv_iper_f,inv_iper_w);															// inverse permutation
+	input = apply_pbox<uint64,64>(input,inv_iper_f,inv_iper_w);													// inverse permutation
 	return input;
 }
 
 uint64 Des::decrypt(uint64 input) {
+	input = apply_pbox<uint64,64>(input,inv_iper_f,inv_iper_w);													// inverse permutation
+
 	pair<uint32,uint32>* LR = new pair<uint32,uint32>(input & 0xffffffff,(input >> 32) & 0xffffffff); 			// (L8,R8) <- (CL,CR)
 	printf("L%i : %08x | R%i : %08x\n",8,LR->first,8,LR->second);
 
@@ -183,8 +185,9 @@ uint64 Des::decrypt(uint64 input) {
 	{																											// L1 <- R0
 		unround(LR,i);																							// R1 <- L0 ^ f(R0,K0)
 	}
-
-	return Crypto_tools::concat<uint32,uint64>(LR->second,LR->first);											// R8 || L8 (/!\ swap)
+	input = Crypto_tools::concat<uint32,uint64>(LR->second,LR->first);											// R8 || L8 (/!\ swap) 
+	input = apply_pbox<uint64,64>(input,iper_f,iper_w);															// first permutation
+	return input;
 }
 
 void Des::print(uint64 input)
@@ -249,8 +252,18 @@ void Des::test(){
 		{
 			printf("%i <> %i <> %i \n",pos,iper[pos],i + 1);
 		}
+		else if(pos == -1)
+		{
+			printf("!");
+		}
+		else
+		{
+			printf(".");
+		}
 		test <<= 1;
 	}
+	printf("\n");
+
 
 	printf("inv_iper\n");
 	test = 1;
@@ -262,8 +275,18 @@ void Des::test(){
 		{
 			printf("%i <> %i <> %i \n",pos,inv_iper[pos],i + 1);
 		}
+		else if(pos == -1)
+		{
+			printf("!");
+		}
+		else
+		{
+			printf(".");
+		}
 		test <<= 1;
 	}
+	printf("\n");
+
 
 	printf("pc2\n");
 	test = 1;
@@ -275,8 +298,17 @@ void Des::test(){
 		{
 			printf("%i <> %i <> %i \n",pos,inv_iper[pos],i + 1);
 		}
+		else if(pos == -1)
+		{
+			printf("!");
+		}
+		else
+		{
+			printf(".");
+		}
 		test <<= 1;
 	}
+	printf("\n");
 
 	printf("round_exp\n");
 	test = 1;
@@ -288,9 +320,17 @@ void Des::test(){
 		{
 			printf("%i <> %i <> %i \n",pos,inv_iper[pos],i + 1);
 		}
+		else if(pos == -1)
+		{
+			printf("!");
+		}
+		else
+		{
+			printf(".");
+		}
 		test <<= 1;
 	}
-
+	printf("\n");
 
 	printf("round_per\n");
 	uint32 test2 = 1;
@@ -303,8 +343,17 @@ void Des::test(){
 		{
 			printf("%i <> %i <> %i \n",pos,round_per[pos],i + 1);
 		}
+		else if(pos == -1)
+		{
+			printf("!");
+		}
+		else
+		{
+			printf(".");
+		}
 		test2 <<= 1;
 	}
+	printf("\n");
 
 	printf("pc1_left\n");
 	test = 1;
@@ -316,8 +365,17 @@ void Des::test(){
 		{
 			printf("%i <> %i <> %i \n",pos,pc1_left[pos],i + 1);
 		}
+		else if(pos == -1)
+		{
+			printf("!");
+		}
+		else
+		{
+			printf(".");
+		}
 		test <<= 1;
 	}
+	printf("\n");
 
 	printf("pc1_right\n");
 	test = 1;
@@ -329,6 +387,35 @@ void Des::test(){
 		{
 			printf("%i <> %i <> %i \n",pos,pc1_right[pos],i + 1);
 		}
+		else if(pos == -1)
+		{
+			printf("!");
+		}
+		else
+		{
+			printf(".");
+		}
 		test <<= 1;
 	}
+	printf("\n");
+
+	printf("inversions\n");
+	test = 1;
+	for (int i = 0; i < 64; ++i)
+	{
+		res = apply_pbox<uint64,64>(test,iper_f,iper_w);
+		res = apply_pbox<uint64,64>(res,inv_iper_f,inv_iper_w);
+		if(res == test)
+		{
+			printf(".");
+		}
+		else
+		{
+			printf("!");
+		}
+		test <<= 1;
+	}
+	printf("\n");
+
+
 }
