@@ -7,35 +7,6 @@ uint8 Easy1::unapply_sbox(uint8 index) {
 	return inv_sbox[index];
 }
 
-uint64 Easy1::apply_pbox(uint64 input) {
-	uint64 output = 0;
-	uint64 mask = 1;
-
-	for (int i = 0; i < 36; ++i)
-	{
-		if((input & mask) > 0)
-		{
-			output = output | (static_cast<uint64>(1) << pbox[i]);
-		}
-		mask <<= 1;
-	}
-	return output;
-}
-uint64 Easy1::unapply_pbox(uint64 input) {
-	uint64 output = 0;
-	uint64 mask = 1;
-
-	for (int i = 0; i < 36; ++i)
-	{
-		if((input & mask) > 0)
-		{
-			output = output | (static_cast<uint64>(1) << inv_pbox[i]);
-		}
-		mask <<= 1;
-	}
-	return output;
-}
-
 uint64 Easy1::apply_key(uint64 input)
 {
 	// key is 18 bits
@@ -58,7 +29,7 @@ uint64 Easy1::round(uint64 input)
 	if(verbose) printf("sbox  : ");
 	if(verbose) Crypto_tools::printn<36>(input);
 
-	input = apply_pbox(input);
+	input = Crypto_tools::apply_pbox<36>(input,pbox);
 	if(verbose) printf("pbox  : ");
 	if(verbose) Crypto_tools::printn<36>(input);
 	
@@ -81,7 +52,7 @@ uint64 Easy1::unround(uint64 input)
 	if(verbose) printf("-key  : ");
 	if(verbose) Crypto_tools::printn<36>(input);
 
-	input = unapply_pbox(input);
+	input = Crypto_tools::apply_pbox<36>(input,inv_pbox);
 	if(verbose) printf("-pbox : ");
 	if(verbose) Crypto_tools::printn<36>(input);
 

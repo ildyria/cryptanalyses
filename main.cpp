@@ -11,6 +11,7 @@
 
 #include "cipher/easy1.h"
 #include "cipher/feal.h"
+#include "cipher/des.h"
 
 int main(int argc, char const *argv[])
 {

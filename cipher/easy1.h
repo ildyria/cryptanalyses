@@ -21,9 +21,7 @@ class Easy1 : public Cipher
 	uint8 inv_pbox[36];
 
 	uint8 apply_sbox(uint8 index);
-	uint64 apply_pbox(uint64 input);
 	uint8 unapply_sbox(uint8 index);
-	uint64 unapply_pbox(uint64 input);
 
 	uint64 apply_key(uint64 input);
 

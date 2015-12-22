@@ -136,6 +136,21 @@ public:
 		printf("\n");
 	}
 
+	template<int size> static uint64 apply_pbox(uint64 input, uint8* pbox) {
+		uint64 output = 0;
+		uint64 mask = 1;
+
+		for (int i = 0; i < size; ++i)
+		{
+			if((input & mask) > 0)
+			{
+				output = output | (static_cast<uint64>(1) << pbox[i]);
+			}
+			mask <<= 1;
+		}
+		return output;
+	}
+
 	template<typename In, typename Out> static Out concat(In in1, In in2)
 	{
 		Out output = 0;
