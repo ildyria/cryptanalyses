@@ -176,17 +176,17 @@ uint64 Des::encrypt(uint64 input) {
 }
 
 uint64 Des::decrypt(uint64 input) {
-	input = apply_pbox<uint64,64>(input,inv_iper_f,inv_iper_w);													// inverse permutation
+	input = apply_pbox<uint64,64>(input,iper_f,iper_w);															// inverse permutation
 
 	pair<uint32,uint32>* LR = new pair<uint32,uint32>(input & 0xffffffff,(input >> 32) & 0xffffffff); 			// (L8,R8) <- (CL,CR)
-	printf("L%i : %08x | R%i : %08x\n",8,LR->first,8,LR->second);
+	printf("L%i : %08x | R%i : %08x\n",_rounds,LR->first,_rounds,LR->second);
 
 	for (uint i = 0; i < _rounds; ++i)
 	{																											// L1 <- R0
 		unround(LR,i);																							// R1 <- L0 ^ f(R0,K0)
 	}
-	input = Crypto_tools::concat<uint32,uint64>(LR->second,LR->first);											// R8 || L8 (/!\ swap) 
-	input = apply_pbox<uint64,64>(input,iper_f,iper_w);															// first permutation
+	input = Crypto_tools::concat<uint32,uint64>(LR->first,LR->second);											// R8 || L8 (/!\ swap) 
+	input = apply_pbox<uint64,64>(input,inv_iper_f,inv_iper_w);													// first permutation
 	return input;
 }
 
@@ -206,7 +206,7 @@ void Des::test(){
 	// printf("to cipher2 : %016lx\n",toencrypt2);
 	// printf("to cipher3 : %016lx\n",toencrypt3);
 	printf("====================\n");
-	auto ciphered1 = encrypt(toencrypt1);
+	uint64 ciphered1 = encrypt(toencrypt1);
 	// auto ciphered2 = encrypt(toencrypt2);
 	// auto ciphered3 = encrypt(toencrypt3);
 	printf("====================\n");
@@ -214,7 +214,7 @@ void Des::test(){
 	// printf("ciphered2 : %016lx\n",ciphered2);
 	// printf("ciphered3 : %016lx\n",ciphered3);
 	printf("====================\n");
-	auto deciphered1 = decrypt(ciphered1);
+	uint64 deciphered1 = decrypt(ciphered1);
 	// auto deciphered2 = decrypt(ciphered2);
 	// auto deciphered3 = decrypt(ciphered3);
 	printf("====================\n");

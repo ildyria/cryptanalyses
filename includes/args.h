@@ -11,10 +11,11 @@ int read_args(int& argc, char const* argv[])
 	if (argc == 2)
 	{
 		i = strtol(argv[1],0,10);
+		printf("cipher chosen : ");
 	}
 	else
 	{
-		printf("cipher by default\n");
+		printf("cipher by default : ");
 	}
 
 	return i;

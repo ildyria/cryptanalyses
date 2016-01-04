@@ -23,20 +23,24 @@ int main(int argc, char const *argv[])
 	Cipher* device;
 	switch(read_args(argc, argv)) {
 		case 1:
+			printf("Easy1\n");
 			device = new Easy1(0xf0f0f0f,3);
 			break;
 
 		case 2:
+			printf("Feal\n");
 			device = new Feal(0x0123456789abcdef,8);
 			break;
 
 		case 3:
+			printf("Des\n");
 			device = new Des(0x133457799bbcdff1);
 			// device = new Des(0x0123456789abcdef);
 			break;
 
 		default:
 			device = new Easy1(0xf0f0f0f,3);
+			printf("Easy1\n");
 	}
 	
 	Timer t = Timer();
