@@ -34,8 +34,10 @@ int main(int argc, char const *argv[])
 
 		case 3:
 			printf("Des\n");
+			// device = new Des(0x8000000000000000);
 			device = new Des(0x133457799bbcdff1);
 			// device = new Des(0x0123456789abcdef);
+			// 
 			break;
 
 		default:

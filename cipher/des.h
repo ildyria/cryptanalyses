@@ -12,7 +12,8 @@
 // 16 rounds
 // require key-schedule
 // 8 S box and P box with expension
-
+// Blocks are composed of bits numbered from left to right,
+// 	i.e., the left most bit of a block is bit one. 
 using std::pair;
 
 class Des : public Cipher
@@ -68,34 +69,6 @@ class Des : public Cipher
 						51,	45,	33,	48,	44,	49,	39,	56,
 						34,	53,	46,	42,	50,	36,	29,	32 };
 
-	// initial permutation
-	uint8 iper_f[64];
-	bool iper_w[64];
-
-	// final permutation
-	uint8 inv_iper_f[64];
-	bool inv_iper_w[64];
-
-	// round expension
-	uint8 round_exp_f[48];
-	bool round_exp_w[48];
-
-	// round permutation
-	uint8 round_per_f[32];
-	bool round_per_w[32];
-
-	// key left
-	uint8 pc1_left_f[28];
-	bool pc1_left_w[28];
-
-	// key right
-	uint8 pc1_right_f[28];
-	bool pc1_right_w[28];
-
-	// key right
-	uint8 pc2_f[48];
-	bool pc2_w[48];
-
 	uint8 S1[4][16] =	{{	14,	4,	13,	1,	2,	15,	11,	8,	3,	10,	6,	12,	5,	9,	0,	7	},
 						{	0,	15,	7,	4,	14,	2,	13,	1,	10,	6,	12,	11,	9,	5,	3,	8	},
 						{	4,	1,	14,	8,	13,	6,	2,	11,	15,	12,	9,	7,	3,	10,	5,	0	},
@@ -129,8 +102,7 @@ class Des : public Cipher
 						{	7,	11,	4,	1,	9,	12,	14,	2,	0,	6,	10,	13,	15,	3,	5,	8	},
 						{	2,	1,	14,	7,	4,	10,	8,	13,	15,	12,	9,	0,	3,	5,	6,	11	}};
 
-	void generate_moves(uint8* tab, int size, uint8* moves, bool* way);
-	template<typename O, int size> O apply_pbox(uint64 input, uint8* pbox, bool* way);
+	template<typename O, int sizeinput, int sizeouput> O apply_pbox(uint64 input, uint8* pbox);
 
 	uint8 apply_sbox(uint8 sbox[4][16], uint8 val);
 
@@ -146,19 +118,6 @@ class Des : public Cipher
 public:
 
 	Des(uint64 key) : Cipher(key, 16) {
-		generate_moves(iper, 64, iper_f, iper_w);
-		// for (int i = 0; i < 64; ++i)
-		// {
-		// 	if(i%8 == 0) printf("\n");
-		// 	printf("%s%02i\t",(iper_w[i] ? "<<" : ">>"), iper_f[i]);
-		// }
-		// printf("\n");
-		generate_moves(inv_iper, 64, inv_iper_f, inv_iper_w);
-		generate_moves(round_per, 32, round_per_f, round_per_w);
-		generate_moves(round_exp, 48, round_exp_f, round_exp_w);
-		generate_moves(pc1_left, 28, pc1_left_f, pc1_left_w);
-		generate_moves(pc1_right, 28, pc1_right_f, pc1_right_w);
-		generate_moves(pc2, 48, pc2_f, pc2_w);
 		keyschedule();
 	};
 	~Des() {};
