@@ -19,39 +19,39 @@ template<typename O, int sizeinput, int sizeouput> O Des::apply_pbox(uint64 inpu
 
 void Des::keyschedule() {
 	// http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
-	printf("KEY SCHEDULE\n");
-	printf("key = \n");
-	Crypto_tools::printn<64>(_key);
+	if(verbose) printf("KEY SCHEDULE\n");
+	if(verbose) printf("key = \n");
+	if(verbose) Crypto_tools::printn<64>(_key);
 
 	uint32 left = apply_pbox<uint32,64,28>(_key,pc1_left);
 	uint32 right = apply_pbox<uint32,64,28>(_key,pc1_right);
-	printf("%i\n",Crypto_tools::posi<uint32,28>(left));
-	printf("%i\n",Crypto_tools::posi<uint32,28>(right));
+	if(verbose) printf("%i\n",Crypto_tools::posi<uint32,28>(left));
+	if(verbose) printf("%i\n",Crypto_tools::posi<uint32,28>(right));
 
-	printf("left = ");
-	Crypto_tools::printn<28>(left);
-	printf("right = ");
-	Crypto_tools::printn<28>(right);
+	if(verbose) printf("left = ");
+	if(verbose) Crypto_tools::printn<28>(left);
+	if(verbose) printf("right = ");
+	if(verbose) Crypto_tools::printn<28>(right);
 
 	for (int i = 0; i < 16; ++i)
 	{
-		printf("---------------\n");
+		if(verbose) printf("---------------\n");
 		if(i == 0 || i == 1 || i == 8 || i == 15) // 1 2 9 16 : rot1
 		{
-			printf("%i : rot1\n",i + 1);
+			if(verbose) printf("%i : rot1\n",i + 1);
 			left = Crypto_tools::rot<uint32,1,28,0xfffffff>(left);
 			right = Crypto_tools::rot<uint32,1,28,0xfffffff>(right);
 		}
 		else
 		{
-			printf("%i : rot2\n",i + 1);
+			if(verbose) printf("%i : rot2\n",i + 1);
 			left = Crypto_tools::rot<uint32,2,28,0xfffffff>(left);
 			right = Crypto_tools::rot<uint32,2,28,0xfffffff>(right);
 		}
-		printf("left  = ");
-		Crypto_tools::printn<28>(left);
-		printf("right = ");
-		Crypto_tools::printn<28>(right);
+		if(verbose) printf("left  = ");
+		if(verbose) Crypto_tools::printn<28>(left);
+		if(verbose) printf("right = ");
+		if(verbose) Crypto_tools::printn<28>(right);
 		uint64 key = Crypto_tools::concat<uint32,uint64,28>(left,right);
 		keys[i] = apply_pbox<uint64,56,48>(key,pc2);
 	}
@@ -116,28 +116,28 @@ uint32 Des::roundf(uint32 message, uint64 key){
 }
 
 void Des::round(pair<uint32,uint32>* input, int num){
-	printf("-------------------------------------\n");
-	printf("L%i : %08x | R%i : %08x\n",num,input->first,num,input->second);
+	if(verbose) printf("-------------------------------------\n");
+	if(verbose) printf("L%i : %08x | R%i : %08x\n",num,input->first,num,input->second);
 	uint32 R = input->second;
 	input->second = input->first ^ roundf(input->second,keys[num]);
 	input->first = R;
-	printf("L%i : %08x | R%i : %08x\n",num + 1,input->first,num + 1,input->second);
+	if(verbose) printf("L%i : %08x | R%i : %08x\n",num + 1,input->first,num + 1,input->second);
 }
 
 void Des::unround(pair<uint32,uint32>* input, int num){
-	printf("-------------------------------------\n");
-	printf("L%i : %08x | R%i : %08x\n",(_rounds - num),input->first,(_rounds - num),input->second);
+	if(verbose) printf("-------------------------------------\n");
+	if(verbose) printf("L%i : %08x | R%i : %08x\n",(_rounds - num),input->first,(_rounds - num),input->second);
 	uint32 R = input->first;
 	input->first = input->second ^ roundf(input->first,keys[_rounds - 1 - num]);
 	input->second = R;
-	printf("L%i : %08x | R%i : %08x\n",(_rounds - 1 - num),input->first,(_rounds - 1 - num),input->second);
+	if(verbose) printf("L%i : %08x | R%i : %08x\n",(_rounds - 1 - num),input->first,(_rounds - 1 - num),input->second);
 }
 
 
 uint64 Des::encrypt(uint64 input) {
 	input = apply_pbox<uint64,64,64>(input,iper);															// first permutation
 	pair<uint32,uint32>* LR = new pair<uint32,uint32>((input >> 32) & 0xffffffff,input & 0xffffffff); 			// (L0,R0) <- (ML,MR)
-	printf("L%i : %08x | R%i : %08x\n",0,LR->first,0,LR->second);
+	if(verbose) printf("L%i : %08x | R%i : %08x\n",0,LR->first,0,LR->second);
 
 	for (uint i = 0; i < _rounds; ++i)
 	{																											// L1 <- R0
@@ -145,22 +145,22 @@ uint64 Des::encrypt(uint64 input) {
 	}
 
 	input = Crypto_tools::concat<uint32,uint64>(LR->second,LR->first);											// R8 || L8 (/!\ swap)
-	input = apply_pbox<uint64,64,64>(input,inv_iper);													// inverse permutation
+	input = apply_pbox<uint64,64,64>(input,inv_iper);															// inverse permutation
 	return input;
 }
 
 uint64 Des::decrypt(uint64 input) {
-	input = apply_pbox<uint64,64,64>(input,iper);															// inverse permutation
+	input = apply_pbox<uint64,64,64>(input,iper);																// inverse permutation
 
 	pair<uint32,uint32>* LR = new pair<uint32,uint32>(input & 0xffffffff,(input >> 32) & 0xffffffff); 			// (L8,R8) <- (CL,CR)
-	printf("L%i : %08x | R%i : %08x\n",_rounds,LR->first,_rounds,LR->second);
+	if(verbose)  printf("L%i : %08x | R%i : %08x\n",_rounds,LR->first,_rounds,LR->second);
 
 	for (uint i = 0; i < _rounds; ++i)
 	{																											// L1 <- R0
 		unround(LR,i);																							// R1 <- L0 ^ f(R0,K0)
 	}
 	input = Crypto_tools::concat<uint32,uint64>(LR->first,LR->second);											// R8 || L8 (/!\ swap) 
-	input = apply_pbox<uint64,64,64>(input,inv_iper);													// first permutation
+	input = apply_pbox<uint64,64,64>(input,inv_iper);															// first permutation
 	return input;
 }
 

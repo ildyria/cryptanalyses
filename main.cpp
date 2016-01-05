@@ -38,6 +38,10 @@ int main(int argc, char const *argv[])
 		case 3:
 			printf("Des\n");
 			Crypto_tools::testCipher<Des>(0x133457799bbcdff1,16,0x0123456789abcdef,0x85E813540F0AB405);
+			Crypto_tools::testCipher<Des>(0x8000000000000000,16,0,0x95A8D72813DAA94D);
+			Crypto_tools::testCipher<Des>(0x4000000000000000,16,0,0x0EEC1487DD8C26D5);
+			Crypto_tools::testCipher<Des>(0x2000000000000000,16,0,0x7AD16FFB79C45926);
+			Crypto_tools::testCipher<Des>(0x1000000000000000,16,0,0xD3746294CA6A6CF3);
 			break;
 
 		default:
