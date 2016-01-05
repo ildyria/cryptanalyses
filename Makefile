@@ -5,10 +5,10 @@ INCLUDE=-I cipher -I includes -I $(GMPDIR)/include
 CFLAGS=-c -pedantic -O2 -Wall -Wextra -std=c++11 $(INCLUDE)
 LDFLAGS=-std=c++11 -lgmpxx -lgmp
 LIB=-L $(GMPDIR)/lib
-SOURCES=big_int.cpp main.cpp $(wildcard cipher/*.cpp)
+SOURCES=big_int.cpp random.cpp linear.cpp main.cpp $(wildcard cipher/*.cpp)
 OBJECTS=$(addprefix $(BIN)/, $(notdir $(SOURCES:.cpp=.o)))
 EXECUTABLE=$(BIN)/main
-vpath %.cpp includes:tools:cipher
+vpath %.cpp includes:tools:cipher:cryptanalysis
 
 all: $(EXECUTABLE)
 

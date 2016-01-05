@@ -22,9 +22,6 @@ class Easy1 : public Cipher
 	uint8 inv_sbox[64];
 	uint8 inv_pbox[36];
 
-	uint8 apply_sbox(uint8 index);
-	uint8 unapply_sbox(uint8 index);
-
 	uint64 apply_key(uint64 input);
 
 	uint64 round(uint64 input);
@@ -32,6 +29,8 @@ class Easy1 : public Cipher
 
 	void print_boxes();
 
+	uint8 apply_sbox(uint8 index);
+	uint8 unapply_sbox(uint8 index);
 public:
 
 	Easy1(uint64 key, int rounds) : Cipher(((key & 0x3f) << 18) | (key & 0x3f), rounds) {
@@ -47,4 +46,9 @@ public:
 	void test() override;
 
 	void print(uint64 b);
+
+	uint8 apply_s(uint8 input, int box = 0) override
+	{
+		return apply_sbox(input);
+	}
 };

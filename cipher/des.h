@@ -116,7 +116,6 @@ class Des : public Cipher
 	void unround(pair<uint32,uint32>* input, int num);
 
 public:
-
 	Des(uint64 key, int rounds) : Cipher(key, rounds) {
 		keyschedule();
 	};
@@ -134,4 +133,17 @@ public:
 	void test() override;
 
 	void print(uint64 b);
+
+	uint8 apply_s(uint8 input, int box)
+	{
+		if(box == 1) return apply_sbox(S1, input);
+		if(box == 2) return apply_sbox(S2, input);
+		if(box == 3) return apply_sbox(S3, input);
+		if(box == 4) return apply_sbox(S4, input);
+		if(box == 5) return apply_sbox(S5, input);
+		if(box == 6) return apply_sbox(S6, input);
+		if(box == 7) return apply_sbox(S7, input);
+		if(box == 8) return apply_sbox(S8, input);
+		return 0;
+	}
 };

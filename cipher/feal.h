@@ -46,4 +46,8 @@ public:
 	void test() override;
 
 	void print(uint64 b);
+
+	uint8 apply_s(uint8 input, int box) {
+		return 0;
+	}
 };

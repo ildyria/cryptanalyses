@@ -34,4 +34,6 @@ public:
 
 	virtual void test(){};
 
+	virtual uint8 apply_s(uint8 input, int box) = 0;
+
 };

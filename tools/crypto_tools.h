@@ -220,6 +220,16 @@ public:
 		{
 			printf("No tests\n");
 		}
+	}
 
+	static int XorBits(uint64 val, int size)
+	{
+		int res = 0;
+		for (int i = 0; i < size; ++i)
+		{
+			res ^= val & static_cast<uint64>(1);
+			val >>= 1;
+		}
+		return res;
 	}
 };

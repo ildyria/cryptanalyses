@@ -7,7 +7,9 @@
 #include "includes/cipher.h"
 // #include "tools/prime_list.h"
 #include "tools/big_int.h"
-#include "tools/Timer.h"
+#include "tools/timer.h"
+#include "tools/random.h"
+#include "cryptanalysis/linear.h"
 
 #include "cipher/easy1.h"
 #include "cipher/feal.h"
@@ -76,6 +78,20 @@ int main(int argc, char const *argv[])
 	}
 	device->test();
 
+	if(arg == 1)
+	{
+		printf("Linear Expressions of Easy1 S-Box\n");
+		Linear* cryptlys = new Linear(device,6,6);
+		cryptlys->generateTable();
+		cryptlys->analysis();
+	}
+	else if(arg == 3)
+	{
+		printf("Linear Expressions of DES S1-Box\n");
+		Linear* cryptlys = new Linear(device,6,4);
+		cryptlys->generateTable();
+		cryptlys->analysis();
+	}
 
 	return 0;
 }
