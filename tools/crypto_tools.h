@@ -199,4 +199,27 @@ public:
 		output |= in2;
 		return output;
 	}
+
+	template<typename Cipher> static void testCipher(uint64 key, int rounds, uint64 tocipher, uint64 expected) {
+		if(tocipher != 0 || expected != 0)
+		{
+			Cipher* cipher = new Cipher(key,rounds);
+			printf("to cipher : %016lx\n",tocipher);
+			printf("====================\n");
+			uint64 ciphered = cipher->encrypt(tocipher);
+			printf("ciphered : %016lx\n",ciphered);
+			printf("====================\n");
+			uint64 deciphered = cipher->decrypt(ciphered);
+			printf("deciphered : %016lx\n",deciphered);
+			printf("====================\n");
+			printf("cipher match ? %s\n",(ciphered == expected) ? "yes" : "no");
+			printf("plain and decrypt match ? %s\n",(tocipher == deciphered) ? "yes" : "no");
+			printf("====================\n");
+		}
+		else
+		{
+			printf("No tests\n");
+		}
+
+	}
 };

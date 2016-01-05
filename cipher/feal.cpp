@@ -40,7 +40,7 @@ void Feal::keyschedule() {
 	uint32 apre = 0;
 	uint32 bin = 0;
 	uint32 tempkey = 0;
-	for(uint i = 0; i < _rounds ; ++i)
+	for(uint i = 0; i < (_rounds + 8)/2 ; ++i)
 	{
 		// printf("---------------\n");
 
@@ -114,19 +114,19 @@ uint64 Feal::encrypt(uint64 input) {
 
 	LR->first = LR->first ^ LR->second;																			// L8 <- L8 ^ R8
 
-	LR->second = LR->second ^ Crypto_tools::concat<uint16,uint32>(keys[(2*_rounds) - 4],keys[(2*_rounds) - 3]);	// R8 <- R8 ^ K12||K13
-	LR->first = LR->first ^ Crypto_tools::concat<uint16,uint32>(keys[(2*_rounds) - 2],keys[(2*_rounds) - 1]);	// L8 <- L8 ^ K14||K15
+	LR->second = LR->second ^ Crypto_tools::concat<uint16,uint32>(keys[_rounds + 4],keys[_rounds + 5]);	// R8 <- R8 ^ K12||K13
+	LR->first = LR->first ^ Crypto_tools::concat<uint16,uint32>(keys[_rounds + 6],keys[_rounds + 7]);	// L8 <- L8 ^ K14||K15
 
 	return Crypto_tools::concat<uint32,uint64>(LR->second,LR->first);											// R8 || L8 (/!\ swap)
 }
 
 uint64 Feal::decrypt(uint64 input) {
 	pair<uint32,uint32>* LR = new pair<uint32,uint32>(input & 0xffffffff,(input >> 32) & 0xffffffff); 			// (L8,R8) <- (CL,CR)
-	printf("L%i : %08x | R%i : %08x\n",8,LR->first,8,LR->second);
+	printf("L%i : %08x | R%i : %08x\n",_rounds,LR->first,_rounds,LR->second);
 
-	LR->second = LR->second ^ Crypto_tools::concat<uint16,uint32>(keys[(2*_rounds) - 4],keys[(2*_rounds) - 3]);	// R8 <- R8 ^ K12||K13
-	LR->first = LR->first ^ Crypto_tools::concat<uint16,uint32>(keys[(2*_rounds) - 2],keys[(2*_rounds) - 1]);	// L8 <- L8 ^ K14||K15
-	printf("L%i : %08x | R%i : %08x\n",8,LR->first,8,LR->second);
+	LR->second = LR->second ^ Crypto_tools::concat<uint16,uint32>(keys[_rounds + 4],keys[_rounds + 5]);	// R8 <- R8 ^ K12||K13
+	LR->first = LR->first ^ Crypto_tools::concat<uint16,uint32>(keys[_rounds + 6],keys[_rounds + 7]);	// L8 <- L8 ^ K14||K15
+	printf("L%i : %08x | R%i : %08x\n",_rounds,LR->first,_rounds,LR->second);
 
 	LR->first = LR->first ^ LR->second;																			// L8 <- L8 ^ R8
 

@@ -117,6 +117,11 @@ class Des : public Cipher
 
 public:
 
+	Des(uint64 key, int rounds) : Cipher(key, rounds) {
+		keyschedule();
+	};
+
+	// default
 	Des(uint64 key) : Cipher(key, 16) {
 		keyschedule();
 	};

@@ -33,8 +33,8 @@ class Feal : public Cipher
 
 public:
 
-	Feal(uint64 key, uint64 rounds) : Cipher(key, rounds) {
-		keys = new uint16[2*rounds] {};
+	Feal(uint64 key, int rounds) : Cipher(key, rounds) {
+		keys = new uint16[rounds + 8] {};
 		keyschedule();
 	};
 	~Feal() {};

@@ -19,9 +19,38 @@ int main(int argc, char const *argv[])
 	printf("\t But remember, all code is guilty until proven innocent !\n");
 	printf("\t \tWhen in doubt, use Brute force ! - Ken Thompson\n \n");
 
+	int arg = read_args(argc, argv);
+	Timer t = Timer();
+	t.start();
+	switch(arg) {
+		case 1:
+			printf("Easy1\n");
+			Crypto_tools::testCipher<Easy1>(0xf0f0f0f,3,0,0);
+			break;
 
+		case 2:
+			printf("Feal\n");
+			Crypto_tools::testCipher<Feal>(0x0123456789abcdef,8,0,0xCEEF2C86F2490752);
+			Crypto_tools::testCipher<Feal>(0x0123456789abcdef,16,0,0x3ADE0D2AD84D0B6F);
+			Crypto_tools::testCipher<Feal>(0x0123456789abcdef,32,0,0x69B0FAE6DDED6B0B);
+			break;
+
+		case 3:
+			printf("Des\n");
+			Crypto_tools::testCipher<Des>(0x133457799bbcdff1,16,0x0123456789abcdef,0x85E813540F0AB405);
+			break;
+
+		default:
+			printf("Easy1\n");
+			Crypto_tools::testCipher<Easy1>(0xf0f0f0f,3,0,0);
+	}
+	t.stop();
+	printf("done in : %.3lf ms\n", t.resultmus()/1000.0);
+
+
+	printf("------------------------------------------------------------\n");
 	Cipher* device;
-	switch(read_args(argc, argv)) {
+	switch(arg) {
 		case 1:
 			printf("Easy1\n");
 			device = new Easy1(0xf0f0f0f,3);
@@ -34,34 +63,15 @@ int main(int argc, char const *argv[])
 
 		case 3:
 			printf("Des\n");
-			// device = new Des(0x8000000000000000);
 			device = new Des(0x133457799bbcdff1);
-			// device = new Des(0x0123456789abcdef);
-			// 
 			break;
 
 		default:
 			device = new Easy1(0xf0f0f0f,3);
 			printf("Easy1\n");
 	}
-	
-	Timer t = Timer();
-	t.start();
-	printf("result : \n");
-	auto cipher = device->encrypt(0);
-	printf("result of encrypt :\n");
-	device->print(cipher);
-	printf("====================\n");
-	auto decrypt = device->decrypt(cipher);
-	printf("result of decrypt :\n");
-	device->print(decrypt);
-	printf("\n");
-
 	device->test();
 
-	t.stop();
-
-	printf("done in : %.3lf ms\n", t.resultmus()/1000.0);
 
 	return 0;
 }

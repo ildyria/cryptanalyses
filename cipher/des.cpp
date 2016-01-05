@@ -61,7 +61,6 @@ uint8 Des::apply_sbox(uint8 sbox[4][16], uint8 val)
 {
 	uint8 row = (val & 1) | ((val >> 4) & 2);
 	uint8 col = (val & 0x1e) >> 1;
-	// printf("\n[%i][%i] = %i\n", row, col, sbox[row][col]);
 	return sbox[row][col];
 }
 
@@ -69,7 +68,6 @@ uint32 Des::roundf(uint32 message, uint64 key){
 	uint64 extended = apply_pbox<uint64,32,48>(message,round_exp);
 	extended ^= key;
 	// Crypto_tools::printn<48>(extended);
-	// printf("%012lx\n", extended);
 	uint8 substbox[8] = {0,0,0,0,0,0,0,0};
 	Crypto_tools::spliti<uint64, uint8, 6, 8, 0x3f>(extended, substbox);
 
@@ -172,39 +170,20 @@ void Des::print(uint64 input)
 }
 
 void Des::test(){
-	// uint64 toencrypt1 = 0;
 	uint64 toencrypt1 = 0x0123456789abcdef;
-	// uint64 toencrypt1 = 0x4e6f772069732074;
-	// uint64 toencrypt2 = 0x68652074696d6520;
-	// uint64 toencrypt3 = 0x666f7220616c6c20;
-	// uint64 tomatch1 = 	0x95A8D72813DAA94D;
 	uint64 tomatch1 = 	0x85E813540F0AB405;
-	// uint64 tomatch2 = 	0x6a271787ab8883f9;
-	// uint64 tomatch3 = 	0x893d51ec4b563b53;
 	printf("to cipher1 : %016lx\n",toencrypt1);
-	// printf("to cipher2 : %016lx\n",toencrypt2);
-	// printf("to cipher3 : %016lx\n",toencrypt3);
 	printf("====================\n");
 	uint64 ciphered1 = encrypt(toencrypt1);
-	// auto ciphered2 = encrypt(toencrypt2);
-	// auto ciphered3 = encrypt(toencrypt3);
 	printf("====================\n");
 	printf("ciphered1 : %016lx\n",ciphered1);
-	// printf("ciphered2 : %016lx\n",ciphered2);
-	// printf("ciphered3 : %016lx\n",ciphered3);
 	printf("====================\n");
 	uint64 deciphered1 = decrypt(ciphered1);
-	// auto deciphered2 = decrypt(ciphered2);
-	// auto deciphered3 = decrypt(ciphered3);
 	printf("====================\n");
 	printf("deciphered1 : %016lx\n",deciphered1);
-	// printf("deciphered2 : %016lx\n",deciphered2);
-	// printf("deciphered3 : %016lx\n",deciphered3);
 	printf("====================\n");
 	printf("cipher match ? %s\n",(ciphered1 == tomatch1) ? "yes" : "no");
 	printf("plain and decrypt match ? %s\n",(toencrypt1 == deciphered1) ? "yes" : "no");
-	// printf("cipher match ? %s\n",(ciphered1 == tomatch1 && ciphered2 == tomatch2 && ciphered3 == tomatch3) ? "yes" : "no");
-	// printf("plain and decrypt match ? %s\n",(toencrypt1 == deciphered1 && toencrypt2 == deciphered2 && toencrypt3 == deciphered3) ? "yes" : "no");
 	printf("====================\n");
 
 	Crypto_tools::printn<64>(_key);
@@ -213,10 +192,6 @@ void Des::test(){
 		printf("K%i = ",i);
 		Crypto_tools::printn<48>(keys[i]);
 	}
-	// for (uint i = 0; i < _rounds; ++i)
-	// {
-	// 	printf("K%i = %012lx\n",i,keys[i]);
-	// }
 	printf("########################\n");
 
 	printf("iper\n");
@@ -271,7 +246,6 @@ void Des::test(){
 	test = 1;
 	for (int i = 56; i > 0; --i)
 	{
-		// res = apply_pbox<uint64,48>(test,pc2_f,pc2_w);
 		res = apply_pbox<uint64,56,48>(test,pc2);
 		pos = Crypto_tools::posi<uint64,48>(res);
 		if (pos >= 0 && pc2[pos] != i)
@@ -280,12 +254,10 @@ void Des::test(){
 		}
 		else if(pos == -1)
 		{
-			// printf("not found : %i\n",i );
 			printf("%i, ", i);
 		}
 		else
 		{
-			// printf("%i : %i <> %i \n", i, pos + 1, pc2[pos]);
 			printf(".");
 		}
 		test <<= 1;
@@ -341,7 +313,6 @@ void Des::test(){
 	test = 1;
 	for (int i = 64; i > 0; --i)
 	{
-		// res2 = apply_pbox<uint32,28>(test,pc1_left_f,pc1_left_w);
 		res2 = apply_pbox<uint32,64,28>(test,pc1_left);
 		pos = Crypto_tools::posi<uint32,28>(res2);
 		if (pos >= 0 && pc1_left[pos] != i)

@@ -34,7 +34,7 @@ class Easy1 : public Cipher
 
 public:
 
-	Easy1(uint64 key, uint64 rounds) : Cipher(((key & 0x3f) << 18) | (key & 0x3f), rounds) {
+	Easy1(uint64 key, int rounds) : Cipher(((key & 0x3f) << 18) | (key & 0x3f), rounds) {
 		Crypto_tools::inv_box(pbox, inv_pbox, 36);
 		Crypto_tools::inv_box(sbox, inv_sbox, 64);
 	};
