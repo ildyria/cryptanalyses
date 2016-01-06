@@ -37,7 +37,9 @@ public:
 		keys = new uint16[rounds + 8] {};
 		keyschedule();
 	};
-	~Feal() {};
+	~Feal() {
+		delete keys;
+	};
 
 	uint64 encrypt(uint64 b) override;
 

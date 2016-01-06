@@ -84,6 +84,7 @@ int main(int argc, char const *argv[])
 		Linear* cryptlys = new Linear(device,6,6);
 		cryptlys->generateTable();
 		cryptlys->analysis();
+		cryptlys->sort();
 	}
 	else if(arg == 3)
 	{
@@ -91,6 +92,7 @@ int main(int argc, char const *argv[])
 		Linear* cryptlys = new Linear(device,6,4);
 		cryptlys->generateTable();
 		cryptlys->analysis();
+		cryptlys->sort();
 	}
 
 	return 0;
