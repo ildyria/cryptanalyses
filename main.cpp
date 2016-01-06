@@ -10,6 +10,7 @@
 #include "tools/timer.h"
 #include "tools/random.h"
 #include "cryptanalysis/linear.h"
+#include "cryptanalysis/differential.h"
 
 #include "cipher/easy1.h"
 #include "cipher/feal.h"
@@ -82,14 +83,16 @@ int main(int argc, char const *argv[])
 	{
 		printf("Linear Expressions of Easy1 S-Box\n");
 		Linear* cryptlys = new Linear(device,6,6);
+		// Differential* cryptlys = new Differential(device,6,6);
 		cryptlys->generateTable();
 		cryptlys->analysis();
-		cryptlys->sort();
+		// cryptlys->sort();
 	}
 	else if(arg == 3)
 	{
 		printf("Linear Expressions of DES S1-Box\n");
-		Linear* cryptlys = new Linear(device,6,4);
+		// Linear* cryptlys = new Linear(device,6,4);
+		Differential* cryptlys = new Differential(device,6,4);
 		cryptlys->generateTable();
 		cryptlys->analysis();
 		cryptlys->sort();

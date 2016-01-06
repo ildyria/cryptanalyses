@@ -167,6 +167,29 @@ public:
 		printf("\n");
 	}
 
+	static void print(uint64 input, int N)
+	{
+		uint64 mask = 1;
+		mask <<= (N - 1);
+		for (int i = 1; i <= N; ++i)
+		{
+			printf("%li", (mask & input) >> (N - i));
+			mask >>= 1;
+		}
+	}
+
+	static void printn(uint64 input, int N)
+	{
+		uint64 mask = 1;
+		mask <<= (N - 1);
+		for (int i = 1; i <= N; ++i)
+		{
+			printf("%li", (mask & input) >> (N - i));
+			mask >>= 1;
+		}
+		printf("\n");
+	}
+
 	template<int size> static uint64 apply_pbox(uint64 input, uint8* pbox) {
 		uint64 output = 0;
 		uint64 mask = 1;

@@ -1,14 +1,15 @@
 /* return the list of the 10 000st prime numbers... */
 
 #pragma once
+#include "../includes/typedef.h"
+#include <iostream>
 #include <vector>
 #include <math.h>
-#include "../includes/problem.h"
 
-class Prime_list : public Problem
+class Prime_list
 {
 	std::vector<int> primes;
-	bool is_prime(u_long n);
+	bool is_prime(uint64 n);
 public:
 	Prime_list();
 	~Prime_list() {};
