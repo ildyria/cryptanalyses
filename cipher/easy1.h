@@ -47,7 +47,7 @@ public:
 
 	void print(uint64 b);
 
-	uint8 apply_s(uint8 input, int box = 0) override
+	uint8 apply_s(uint16 input, int box = 1) override
 	{
 		return apply_sbox(input);
 	}

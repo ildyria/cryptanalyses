@@ -9,17 +9,19 @@ void Differential::printEquation(int Xi, int Yi)
 
 void Differential::generateTable() {
 	int res = 0;
+	#pragma omp parallel for
 	for (int i = 0; i < 1 << _size_in; ++i)
 	{
 		for (int j = 0; j < 1 << _size_in; ++j)
 		{
-			res = _cipher->apply_s(i,1) ^ _cipher->apply_s(j,1);
-			_equations[idx(i^j,res)]++;;
+			res = _cipher->apply_s(i,1) ^ _cipher->apply_s(i^j,1);
+			#pragma omp atomic
+			_equations[idx(j,res)]++;;
 		}
 	}
 }
 
-void Differential::analysis(bool zeroes) {
+void Differential::printTable(bool zeroes) {
 	int val;
 	printf("    | ");
 	for (int j = 0; j < 1 << _size_out; ++j)
@@ -52,19 +54,26 @@ void Differential::analysis(bool zeroes) {
 	}
 }
 
-void Differential::sort() {
+void Differential::sort(bool print) {
 	for (int i = 0; i < (1 << (_size_in + _size_out)); ++i)
 	{
 		_results[i] = std::pair<int,std::pair<int,int>>(_equations[i],std::pair<int,int>(getrow(i),getcol(i))); 
 	}
 	std::vector<std::pair<int,std::pair<int,int>>> res (_results,_results+(1 << (_size_in + _size_out)));
 	std::sort(res.begin(), res.end(), Differential::compare);
-	for(auto it = res.begin() + 1; it != res.end(); it++)
+	if(print)
 	{
-		if(std::get<0>(*it) > _threshold)
+		for(auto it = res.begin() + 1; it != res.end(); it++)
 		{
-			printEquation(std::get<0>(std::get<1>(*it)),std::get<1>(std::get<1>(*it)));
-			printf(" : %i / %i\n", std::get<0>(*it), 1<<_size_in);
+			if(std::get<0>(*it) > _threshold)
+			{
+				printEquation(std::get<0>(std::get<1>(*it)),std::get<1>(std::get<1>(*it)));
+				printf(" : %i / %i\n", std::get<0>(*it), 1<<_size_in);
+			}
 		}
 	}
+}
+
+void Differential::attack() {
+	printf("Comming Soon...\n");
 }

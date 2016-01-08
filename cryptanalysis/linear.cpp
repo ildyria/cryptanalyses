@@ -2,7 +2,7 @@
 
 void Linear::printEquation(int Xi, int Yi)
 {
-	int mask = 1 << (_size_in - 1);
+	int mask = 1;
 	bool print = false;
 	for(int i = 0; i < _size_in; ++i)
 	{
@@ -12,11 +12,11 @@ void Linear::printEquation(int Xi, int Yi)
 			printf("X%i ", i);
 			print = true;
 		}
-		mask >>= 1;
+		mask <<= 1;
 	}
 	printf("= ");
 	print = false;
-	mask = 1 << (_size_out - 1);
+	mask = 1;
 	for (int i = 0; i < _size_out; ++i)
 	{
 		if((Yi & mask) > 0)
@@ -25,12 +25,13 @@ void Linear::printEquation(int Xi, int Yi)
 			printf("Y%i ", i);
 			print = true;
 		}
-		mask >>= 1;
+		mask <<= 1;
 	}
 }
 
 void Linear::generateTable() {
 	int max = 1 << _size_in;
+	// #pragma omp parallel for
 	for (int i = 0; i < 1 << _size_in; ++i)
 	{
 		for (int j = 0; j < 1 << _size_out; ++j)
@@ -43,12 +44,13 @@ void Linear::generateTable() {
 					res ++;
 				}
 			}
+			// #pragma omp atomic
 			_equations[idx(i,j)] = res - (max >> 1);
 		}
 	}
 }
 
-void Linear::analysis(bool zeroes) {
+void Linear::printTable(bool zeroes) {
 	int val;
 	printf("    | ");
 	for (int j = 0; j < 1 << _size_out; ++j)
@@ -81,39 +83,46 @@ void Linear::analysis(bool zeroes) {
 	}
 }
 
-void Linear::sort() {
+void Linear::sort(bool print) {
 	for (int i = 0; i < (1 << (_size_in + _size_out)); ++i)
 	{
 		_results[i] = std::pair<int,std::pair<int,int>>(_equations[i],std::pair<int,int>(getrow(i),getcol(i))); 
 	}
 	std::vector<std::pair<int,std::pair<int,int>>> res (_results,_results+(1 << (_size_in + _size_out)));
 	std::sort(res.begin(), res.end(), Linear::compare);
-	auto itb = res.begin();
-	auto ite = res.end();
-	ite--;
-	itb++;
-	while(itb < ite)
+	if(print)
 	{
-		// printf("%i\n", (-1) * std::get<0>(*ite));
-		if((-std::get<0>(*ite)) > std::get<0>(*itb))
+		auto itb = res.begin();
+		auto ite = res.end();
+		ite--;
+		itb++;
+		while(itb < ite)
 		{
-			printEquation(std::get<0>(std::get<1>(*ite)),std::get<1>(std::get<1>(*ite)));
-			printf(" : %i\n", std::get<0>(*ite));
-			ite--;
-		}
-		else if (std::get<0>(*itb) > _threshold)
-		{
-			printEquation(std::get<0>(std::get<1>(*itb)),std::get<1>(std::get<1>(*itb)));
-			printf(" : %i\n", std::get<0>(*itb));
-			itb++;
-		}
-		else if (std::get<0>(*ite) > -_threshold)
-		{
-			ite--;
-		}
-		else
-		{
-			itb++;
+			// printf("%i\n", (-1) * std::get<0>(*ite));
+			if((-std::get<0>(*ite)) > std::get<0>(*itb))
+			{
+				printEquation(std::get<0>(std::get<1>(*ite)),std::get<1>(std::get<1>(*ite)));
+				printf(" : %i\n", std::get<0>(*ite));
+				ite--;
+			}
+			else if (std::get<0>(*itb) > _threshold)
+			{
+				printEquation(std::get<0>(std::get<1>(*itb)),std::get<1>(std::get<1>(*itb)));
+				printf(" : %i\n", std::get<0>(*itb));
+				itb++;
+			}
+			else if (std::get<0>(*ite) > -_threshold)
+			{
+				ite--;
+			}
+			else
+			{
+				itb++;
+			}
 		}
 	}
+}
+
+void Linear::attack() {
+	printf("Comming Soon...\n");
 }

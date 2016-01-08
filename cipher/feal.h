@@ -49,7 +49,10 @@ public:
 
 	void print(uint64 b);
 
-	uint8 apply_s(uint8 input, int box) {
-		return 0;
+	uint8 apply_s(uint16 input, int box) {
+		uint8 itab[2] = {0,0};
+
+		Crypto_tools::spliti<uint16,uint8,8,2,0xff>(input,itab);
+		return sbox(itab[0],itab[1],box);
 	}
 };

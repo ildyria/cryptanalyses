@@ -21,7 +21,7 @@ class Differential : public Cryptanalysis
 
 	static bool compare (std::pair<int,std::pair<int,int>> a,std::pair<int,std::pair<int,int>> b)
 	{
-		return ( std::get<0>(a) >  std::get<0>(b));
+		return (std::get<0>(a) >  std::get<0>(b)) && (std::get<0>(std::get<1>(a)) < std::get<0>(std::get<1>(b)));
 	}
 
 	inline int idx(int i, int j) {
@@ -52,7 +52,9 @@ class Differential : public Cryptanalysis
 
 		void generateTable();
 
-		void analysis(bool zeroes = false);
+		void printTable(bool zeroes = false);
 
-		void sort();
+		void sort(bool print = false);
+
+		void attack();
 };

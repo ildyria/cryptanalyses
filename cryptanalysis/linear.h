@@ -51,7 +51,9 @@ class Linear : public Cryptanalysis
 
 		void generateTable();
 
-		void analysis(bool zeroes = false);
+		void printTable(bool zeroes = false);
 
-		void sort();
+		void sort(bool print = false);
+
+		void attack();
 };

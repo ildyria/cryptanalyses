@@ -44,7 +44,7 @@ prog_options read_args(int& argc, char const* argv[])
 			{
 				i++;
 				options.cryptanalysis_type = static_cast<uint8>(std::stoi(argv[i],nullptr,0));
-				printf("%i : analysis chosen (0: none, 1: diff, 2: linear).\n", options.cryptanalysis_type);
+				printf("%i : analysis chosen (0: none, 1: linear, 2: diff).\n", options.cryptanalysis_type);
 			}
 			else
 			{
@@ -58,7 +58,7 @@ prog_options read_args(int& argc, char const* argv[])
 			{
 				i++;
 				options.cipher_type = static_cast<uint8>(std::stoi(argv[i],nullptr,0));
-				printf("%i : cipher chosen (0: easy1, 1: FEAL, 2: DES).\n", options.cipher_type);
+				printf("%i : cipher chosen (0: Easy1, 1: FEAL-8, 2: DES).\n", options.cipher_type);
 			}
 			else
 			{

@@ -134,7 +134,7 @@ public:
 
 	void print(uint64 b);
 
-	uint8 apply_s(uint8 input, int box)
+	uint8 apply_s(uint16 input, int box)
 	{
 		if(box == 1) return apply_sbox(S1, input);
 		if(box == 2) return apply_sbox(S2, input);

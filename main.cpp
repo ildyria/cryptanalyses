@@ -23,10 +23,11 @@ int main(int argc, char const *argv[])
 	printf("\t \tWhen in doubt, use Brute force ! - Ken Thompson\n \n");
 
 	prog_options options = read_args(argc, argv);
+	Timer t = Timer();
+	Random::I(0);
 
 	if(options.testing)
 	{
-		Timer t = Timer();
 		t.start();
 		switch(options.cipher_type) {
 			case 1:
@@ -75,8 +76,8 @@ int main(int argc, char const *argv[])
 		case 2:
 			printf("Feal\n");
 			device = new Feal(0x0123456789abcdef,8);
-			properties.input_size = 32;
-			properties.output_size = 32;
+			properties.input_size = 16;
+			properties.output_size = 4;
 			break;
 
 		case 3:
@@ -96,23 +97,29 @@ int main(int argc, char const *argv[])
 
 	Cryptanalysis* cryptlys;
 
+	t.start();
 	if(options.cryptanalysis_type == 1)
 	{
 		printf("Linear Cryptanalysis\n");
 		cryptlys = new Linear(device,properties.input_size,properties.output_size);
+		cryptlys->generateTable();
 	}
 	else if(options.cryptanalysis_type == 2)
 	{
 		printf("Differential Cryptanalysis\n");
 		cryptlys = new Differential(device,properties.input_size,properties.output_size);
+		cryptlys->generateTable();
 	}
 
-	if(options.cryptanalysis_type == 1 || options.cryptanalysis_type == 1)
+	if(options.cryptanalysis_type == 1 || options.cryptanalysis_type == 2)
 	{
-		cryptlys->generateTable();
-		cryptlys->analysis();
-		cryptlys->sort();
+		cryptlys->printTable();
+		cryptlys->sort(true);
 	}
+
+	t.stop();
+	printf("done in : %.3lf ms\n", t.resultmus()/1000.0);
+	printf("------------------------------------------------------------\n");
 
 	return 0;
 }
