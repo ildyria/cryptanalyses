@@ -1,11 +1,12 @@
 #pragma once
 #include "../includes/typedef.h"
 #include "../includes/cipher.h"
+#include "../includes/cryptanalysis.h"
 #include <utility>
 #include <algorithm>
 #include <vector>
 
-class Linear
+class Linear : public Cryptanalysis
 {
 	Cipher* _cipher;
 	
@@ -37,7 +38,7 @@ class Linear
 
 
 	public:
-		Linear(Cipher* cipher, int size_in, int size_out) : _cipher(cipher), _size_in(size_in), _size_out(size_out)
+		Linear(Cipher* cipher, int size_in, int size_out) : Cryptanalysis(), _cipher(cipher), _size_in(size_in), _size_out(size_out)
 		{
 			_equations = new int[1 << (size_in + size_out)]{};
 			_results = new std::pair<int,std::pair<int,int>>[1 << (size_in + size_out)]{};
