@@ -1,6 +1,5 @@
 #include <iostream>
 #include <stdio.h>
-#include <gmp.h>
 #include <string>
 #include "includes/typedef.h"
 #include "includes/args.h"
@@ -13,8 +12,11 @@
 #include "cryptanalysis/differential.h"
 
 #include "cipher/easy1.h"
+#include "cipher/cryptoSElight.h"
 #include "cipher/feal.h"
 #include "cipher/des.h"
+#include "cipher/SboxProd.h"
+#include "cipher/SboxAES.h"
 
 int main(int argc, char const *argv[])
 {
@@ -54,6 +56,19 @@ int main(int argc, char const *argv[])
 				Crypto_tools::testCipher<Des>(0x1000000000000000,16,0,0xD3746294CA6A6CF3);
 				break;
 
+			case 4:
+				printf("cryptoSElight\n");
+				Crypto_tools::testCipher<cryptoSElight>(0xf0f0f0f0,5,0,0);
+				break;
+
+			case 5:
+				printf("SboxProd\n");
+				break;
+
+			case 6:
+				printf("SboxAES\n");
+				break;
+
 			default:
 				printf("Easy1\n");
 				Crypto_tools::testCipher<Easy1>(0xf0f0f0f,3,0,0);
@@ -71,6 +86,7 @@ int main(int argc, char const *argv[])
 			device = new Easy1(0xf0f0f0f,3);
 			properties.input_size = 6;
 			properties.output_size = 6;
+			properties.sbox_selected = 1;
 			break;
 
 		case 2:
@@ -78,6 +94,7 @@ int main(int argc, char const *argv[])
 			device = new Feal(0x0123456789abcdef,8);
 			properties.input_size = 16;
 			properties.output_size = 4;
+			properties.sbox_selected = 1;
 			break;
 
 		case 3:
@@ -85,12 +102,41 @@ int main(int argc, char const *argv[])
 			device = new Des(0x133457799bbcdff1);
 			properties.input_size = 6;
 			properties.output_size = 4;
+			properties.sbox_selected = 1;
+			break;
+
+		case 4:
+			printf("cryptoSElight\n");
+			device = new cryptoSElight(0xf0f0f0fc,5);
+			// device->test();
+			properties.input_size = 4;
+			properties.output_size = 4;
+			properties.sbox_selected = 1;
+			break;
+
+		case 5:
+			printf("SboxProd\n");
+			device = new SboxProd();
+			// device->test();
+			properties.input_size = 8;
+			properties.output_size = properties.input_size;
+			properties.sbox_selected = properties.input_size;
+			break;
+
+		case 6:
+			printf("SboxAES\n");
+			device = new SboxAES();
+			// device->test();
+			properties.input_size = 8;
+			properties.output_size = properties.input_size;
+			properties.sbox_selected = properties.input_size;
 			break;
 
 		default:
 			device = new Easy1(0xf0f0f0f,3);
 			properties.input_size = 6;
 			properties.output_size = 6;
+			properties.sbox_selected = 1;
 			printf("Easy1\n");
 	}
 	// device->test();
@@ -102,13 +148,14 @@ int main(int argc, char const *argv[])
 	{
 		printf("Linear Cryptanalysis\n");
 		cryptlys = new Linear(device,properties.input_size,properties.output_size);
-		cryptlys->generateTable();
+		cryptlys->generateTable(properties.sbox_selected);
 	}
 	else if(options.cryptanalysis_type == 2)
 	{
 		printf("Differential Cryptanalysis\n");
 		cryptlys = new Differential(device,properties.input_size,properties.output_size);
-		cryptlys->generateTable();
+		cryptlys->generateTable(properties.sbox_selected);
+		// cryptlys->attack();
 	}
 
 	if(options.cryptanalysis_type == 1 || options.cryptanalysis_type == 2)

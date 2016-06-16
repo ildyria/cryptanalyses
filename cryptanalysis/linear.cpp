@@ -29,7 +29,7 @@ void Linear::printEquation(int Xi, int Yi)
 	}
 }
 
-void Linear::generateTable() {
+void Linear::generateTable(int SboxNum) {
 	int max = 1 << _size_in;
 	// #pragma omp parallel for
 	for (int i = 0; i < 1 << _size_in; ++i)
@@ -39,7 +39,7 @@ void Linear::generateTable() {
 			int res = 0;
 			for (int k = 0; k < max; ++k)
 			{
-				if(Crypto_tools::XorBits(k & i,_size_in) == Crypto_tools::XorBits(_cipher->apply_s(k,1) & j, _size_out))
+				if(Crypto_tools::XorBits(k & i,_size_in) == Crypto_tools::XorBits(_cipher->apply_s(k,SboxNum) & j, _size_out))
 				{
 					res ++;
 				}
@@ -96,7 +96,8 @@ void Linear::sort(bool print) {
 		auto ite = res.end();
 		ite--;
 		itb++;
-		while(itb < ite)
+		int printed = 0;
+		while(itb < ite  && printed < _print_num)
 		{
 			// printf("%i\n", (-1) * std::get<0>(*ite));
 			if((-std::get<0>(*ite)) > std::get<0>(*itb))
@@ -104,12 +105,14 @@ void Linear::sort(bool print) {
 				printEquation(std::get<0>(std::get<1>(*ite)),std::get<1>(std::get<1>(*ite)));
 				printf(" : %i\n", std::get<0>(*ite));
 				ite--;
+				printed ++;
 			}
 			else if (std::get<0>(*itb) > _threshold)
 			{
 				printEquation(std::get<0>(std::get<1>(*itb)),std::get<1>(std::get<1>(*itb)));
 				printf(" : %i\n", std::get<0>(*itb));
 				itb++;
+				printed ++;
 			}
 			else if (std::get<0>(*ite) > -_threshold)
 			{

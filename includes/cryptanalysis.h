@@ -13,7 +13,9 @@ public:
 	Cryptanalysis() {};
 	virtual ~Cryptanalysis(){};
 
-	virtual void generateTable() = 0;
+	virtual void generateTable() { generateTable(1); };
+
+	virtual void generateTable(int k) = 0;
 
 	virtual void printTable(bool zeroes = false) = 0;
 

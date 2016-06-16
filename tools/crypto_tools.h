@@ -144,6 +144,20 @@ public:
 		return output;
 	}
 
+	template<typename U, int num> static inline U rotR(U input)
+	{
+		U output = input << (sizeof(U)* CHAR_BIT - num);
+		output |= (input >> num);
+		return output;
+	}
+
+	template<typename U, int num, int size, U mask> static inline U rotR(U input)
+	{
+		U output = (input << (size - num)) & mask;
+		output |= (input >> num);
+		return output;
+	}
+
 	template<int N> static void print(uint64 input)
 	{
 		uint64 mask = 1;

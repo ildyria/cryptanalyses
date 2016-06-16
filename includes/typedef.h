@@ -20,4 +20,5 @@ typedef struct prog_options {
 typedef struct device_properties {
 	uint8 input_size;
 	uint8 output_size;
+	uint8 sbox_selected;
 } device_properties;

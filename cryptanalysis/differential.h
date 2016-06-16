@@ -15,8 +15,13 @@ class Differential : public Cryptanalysis
 	std::pair<int,std::pair<int,int>>* _results;
 	int _size_in;
 	int _size_out;
-	int _threshold = 4;
+	int _threshold = 2;
+	int _print_num = 10;
+	unsigned long _diff_input = 1;
+	unsigned long _diff_target = 1;
 
+	unsigned long _num_target = 1000000; //
+	
 	void printEquation(int Xi, int Yi);
 
 	static bool compare (std::pair<int,std::pair<int,int>> a,std::pair<int,std::pair<int,int>> b)
@@ -50,7 +55,7 @@ class Differential : public Cryptanalysis
 			delete _results;
 		};
 
-		void generateTable();
+		void generateTable(int SboxNum);
 
 		void printTable(bool zeroes = false);
 

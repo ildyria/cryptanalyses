@@ -14,7 +14,8 @@ class Linear : public Cryptanalysis
 	std::pair<int,std::pair<int,int>>* _results;
 	int _size_in;
 	int _size_out;
-	int _threshold = 6;
+	int _threshold;
+	int _print_num;
 
 	void printEquation(int Xi, int Yi);
 
@@ -42,6 +43,8 @@ class Linear : public Cryptanalysis
 		{
 			_equations = new int[1 << (size_in + size_out)]{};
 			_results = new std::pair<int,std::pair<int,int>>[1 << (size_in + size_out)]{};
+			_threshold = size_out;
+			_print_num = 10;
 		};
 		~Linear()
 		{
@@ -49,7 +52,7 @@ class Linear : public Cryptanalysis
 			delete _results;
 		};
 
-		void generateTable();
+		void generateTable(int SboxNum);
 
 		void printTable(bool zeroes = false);
 
